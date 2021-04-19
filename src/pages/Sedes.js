@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Table } from "react-bootstrap";
 import { Button } from "react-bootstrap";
-//import firebase from "../config/firebase";
+import AddSedeButton from "../components/AddSedeButton";
+import firebase from "../config/firebase";
 
 export default class Sedes extends Component {
   constructor() {
@@ -16,12 +17,12 @@ export default class Sedes extends Component {
         location: "",
         active: "",
       },
-      //db: firebase.firestore(),
+      db: firebase.firestore(),
     };
   }
 
   componentDidMount = () =>{
-      //this.getSedes();
+      this.getSedes();
   }
 
   getSedes = () => {
@@ -32,7 +33,7 @@ export default class Sedes extends Component {
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          //console.log(doc.data());
+          console.log(doc.data());
           sedes.push(doc.data());
         });
         this.setState({sedes});
@@ -75,6 +76,7 @@ export default class Sedes extends Component {
           </thead>
           <tbody>{this.renderizarSedes()}</tbody>
         </Table>
+        <AddSedeButton/>
       </div>
     );
   }

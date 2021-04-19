@@ -14,24 +14,48 @@ import PrivateRoute from "../components/PrivateRoute";
 export default (
     <Switch>
         <PrivateRoute exact path="/home">
+            <Container>
             <NavBar />
             <Home />
+            </Container>
         </PrivateRoute>
         <PrivateRoute path="/usuarios">
+            <Container>
             <NavBar />
             <Usuarios />
+            </Container>
         </PrivateRoute>
         <PrivateRoute path="/buscador">
+            <Container>
             <NavBar />
             <Buscador />
+            </Container>
         </PrivateRoute>
         <PrivateRoute path="/sedes">
+            <Container>
             <NavBar />
             <Sedes />
+            </Container>
         </PrivateRoute>
-        <Route path="*">
+        <Route exact path="/signup">
+            <Container className="d-flex align-items-center justify-content-center" style={{ minHeight: "100vh"}}>
+                <div className="w-100" style={{maxWidth:"400px"}}>
+                    <Signup />
+                </div>
+            </Container>
+        </Route>
+        <Route exact path="/">
+            <Container className="d-flex align-items-center justify-content-center" style={{ minHeight: "100vh"}}>
+                <div className="w-100" style={{maxWidth:"400px"}}>
+                    <Login />
+                </div>
+            </Container>
+        </Route>
+        <Route path="/*">
+            <Container>
             <NavBar />
             <NotFound />
+            </Container>
         </Route>
     </Switch>
 )
