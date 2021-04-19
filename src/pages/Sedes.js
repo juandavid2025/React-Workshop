@@ -39,7 +39,9 @@ export default class Sedes extends Component {
   }
 
   deleteSede =(sede)=>{
-      db.sedes.doc(sede.id).delete()
+      var uuid=sede.id
+      console.log(uuid)
+      db.sedes.doc(uuid).delete()
       this.getSedes()
   }
 

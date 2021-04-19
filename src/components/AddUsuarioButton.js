@@ -5,7 +5,9 @@ import {db} from "../config/firebase"
 
 export default function AddUsuarioButton() {
 
+    const [sedes,setSedes]= useState([])
     const [open, setOpen] = useState(false)
+    const [id, setId] = useState("")
     const [Nombre, setNombre] = useState("")
     const [Apellido, setApellido] = useState("")
     const [Email, setEmail] = useState("")
@@ -13,8 +15,51 @@ export default function AddUsuarioButton() {
     const [Sede, setSede] = useState("")
     const [Activo, setActivo] = useState("")
 
+    function generateUUID() { // Public Domain/MIT
+        var d = new Date().getTime();//Timestamp
+        var d2 = (performance && performance.now && (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
+        var uuid= 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16;//random number between 0 and 16
+            if(d > 0){//Use timestamp until depleted
+                r = (d + r)%16 | 0;
+                d = Math.floor(d/16);
+            } else {//Use microseconds since page-load if supported
+                r = (d2 + r)%16 | 0;
+                d2 = Math.floor(d2/16);
+            }
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });  
+        setId(uuid)
+        console.log(id)
+    }
+
+    
+    function getSedes(){
+        let sedes = [];
+
+        db.sedes
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            sedes.push(doc.data());
+          });
+        });
+        setSedes({sedes});
+        console.log("sedes")
+    }
+
+    function renderOptions(){
+        let options=[];
+        for(let i=0;i<sedes.length;i++){
+            options.push(<option value={sedes[i].id}>{sedes[i].name}</option>)
+        }
+        console.log("vista")
+        return options;
+    }
 
     function openModal(){
+        getSedes()
+        generateUUID()
         setOpen(true)
     }
 
@@ -22,14 +67,10 @@ export default function AddUsuarioButton() {
         setOpen(false)
     }
 
-    function listar(){
-        console.log( Nombre, Apellido, Email, Validez,Sede,
-            Activo)
-    }
 
     function handleSubmit(e){
         e.preventDefault();
-        db.usuarios.add({name:Nombre, lastname:Apellido, email:Email, vality:Validez,campus:Sede,
+        db.sedes.doc(Sede).collection("usuarios").doc(id).set({id:id,name:Nombre, lastname:Apellido, email:Email, vality:Validez,campus:Sede,
             active:Activo})
         setNombre("")
         setApellido("")
@@ -42,7 +83,7 @@ export default function AddUsuarioButton() {
     }
     return (
         <>
-        <Button onClick={openModal} variant="outline-primary" size="sm">
+        <Button onClick={openModal} disabled={open} variant="outline-primary" size="sm">
             Agregar Usuario
         </Button>
         <Modal show={open} onHide={closeModal}>
@@ -70,8 +111,9 @@ export default function AddUsuarioButton() {
                     </Form.Group>
                     <Form.Group controlId="formName">
                         <Form.Label>Sede</Form.Label>
-                        <Form.Control type="text" placeholder="Sede" value={Sede} onChange={e=> setSede(e.target.value)}
-                        name="Sede"/>
+                        <Form.Control as="select">
+                            {renderOptions()}
+                        </Form.Control>
                     </Form.Group>
                     <Form.Group controlId="formName">
                         <Form.Label>Activo</Form.Label>
@@ -81,7 +123,7 @@ export default function AddUsuarioButton() {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={closeModal}> Cerrar </Button>
-                    <Button variant="success" type="submit" onClick ={listar}> Agregar Sede</Button>
+                    <Button variant="success" type="submit"> Agregar Sede</Button>
                 </Modal.Footer>
             </Form>
         </Modal>
