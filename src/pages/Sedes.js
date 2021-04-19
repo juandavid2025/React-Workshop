@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Table } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import AddSedeButton from "../components/AddSedeButton";
-import firebase from "../config/firebase";
+import {db} from "../config/firebase";
 
 export default class Sedes extends Component {
   constructor() {
@@ -17,7 +17,6 @@ export default class Sedes extends Component {
         location: "",
         active: "",
       },
-      db: firebase.firestore(),
     };
   }
 
@@ -28,8 +27,7 @@ export default class Sedes extends Component {
   getSedes = () => {
       let sedes = [];
 
-      this.state.db
-      .collection("sedes")
+      db.sedes
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {

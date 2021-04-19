@@ -80,7 +80,7 @@ export default function AddSedeButton() {
                     </Form.Group>
                     <Form.Group controlId="formName">
                         <Form.Label>Activa</Form.Label>
-                        <Form.Control type="select" placeholder="Activa" value={activa} onChange={e=> setActive(e.target.value)}
+                        <Form.Control type="text" placeholder="Activa" value={activa} onChange={e=> setActive(e.target.value)}
                         name="Bool"/>
                     </Form.Group>
                 </Modal.Body>
