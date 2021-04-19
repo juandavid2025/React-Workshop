@@ -38,6 +38,11 @@ export default class Sedes extends Component {
       });
   }
 
+  deleteSede =(sede)=>{
+      db.sedes.doc(sede.id).delete()
+      this.getSedes()
+  }
+
   renderizarSedes(){
       let listaSedes = this.state.sedes.map((sede) => (
           <tr key={sede.id}>
@@ -49,7 +54,7 @@ export default class Sedes extends Component {
               <td>{sede.active}</td>
               <td>
                 <Button variant="info">editar</Button>
-                <Button variant="danger">Eliminar</Button>
+                <Button variant="danger" onClick={()=>this.deleteSede(sede)} >Eliminar</Button>
               </td>
           </tr>
       ));

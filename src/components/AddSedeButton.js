@@ -28,8 +28,8 @@ export default function AddSedeButton() {
 
     function handleSubmit(e){
         e.preventDefault();
-        db.sedes.add({nombre:nombre, telefono:telefono, email:email, ciudad:ciudad,direccion:direccion,
-            zip:zip, activa:activa})
+        db.sedes.add({name:nombre, phone:telefono, email:email, ciudad:ciudad,direccion:direccion,
+            zip:zip, active:activa})
         setName("")
         setTelefono("")
         setEmail("")

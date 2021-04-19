@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import firebase from "../config/firebase";
+import {db} from "../config/firebase";
 import {Table} from "react-bootstrap";
 import {Button} from "react-bootstrap";
+import AddUsuarioButton from "../components/AddUsuarioButton";
 
 export default class Usuarios extends Component {
   constructor() {
@@ -19,7 +20,6 @@ export default class Usuarios extends Component {
           campus: "",
           active: "",
       },
-      db: firebase.firestore(),
     };
   }
 
@@ -30,8 +30,7 @@ export default class Usuarios extends Component {
   getUsuarios = () => {
     let usuarios = [];
 
-    this.state.db
-      .collection("usuarios")
+    db.usuarios
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -41,6 +40,10 @@ export default class Usuarios extends Component {
         this.setState({usuarios});
       });
   };
+
+  deleteUser = (usuario) =>{
+      db.usuarios.doc(usuario.id).delete()
+  }
 
   renderizarUsuarios(){
       let lista = this.state.usuarios.map((usuario) => (
@@ -55,7 +58,7 @@ export default class Usuarios extends Component {
               <td>{usuario.active}</td>
               <td>
                 <Button variant="info">editar</Button>
-                <Button variant="danger">Eliminar</Button>
+                <Button variant="danger" onClick={()=>this.deleteUser(usuario)}>Eliminar</Button>
               </td>
           </tr>
       ));
@@ -82,6 +85,7 @@ export default class Usuarios extends Component {
           </thead>
           <tbody>{this.renderizarUsuarios()}</tbody>
         </Table>
+        <AddUsuarioButton/>
       </div>
     );
   }
