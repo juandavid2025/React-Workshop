@@ -3,7 +3,9 @@ import { Table } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import AddSedeButton from "../components/AddSedeButton";
 import {db} from "../config/firebase";
-import {Link} from "react-router-dom"
+import ListaUsuarios from '../components/ListaUsuarios';
+import Sede from "../pages/Sede";
+
 
 export default class Sedes extends Component {
   constructor() {
@@ -45,6 +47,10 @@ export default class Sedes extends Component {
       this.getSedes()
   }
 
+  edit=(selected)=>{
+    this.setState({sede:selected})
+  }
+
   renderizarSedes(){
       let listaSedes = this.state.sedes.map((sede) => (
           <tr key={sede.id}>
@@ -55,7 +61,7 @@ export default class Sedes extends Component {
               <td>{sede.location}</td>
               <td>{sede.active}</td>
               <td>
-                <Button variant="info" >editar</Button>
+                <Button variant="info" onClick={()=>this.edit(sede)}>editar</Button>
                 <Button variant="danger" onClick={()=>this.deleteSede(sede)} >Eliminar</Button>
               </td>
           </tr>
@@ -82,9 +88,8 @@ export default class Sedes extends Component {
           <tbody>{this.renderizarSedes()}</tbody>
         </Table>
         <AddSedeButton/>
-        <div>
-          <Sede id={sede.id}/>
-        </div>
+        <div key="info"><Sede sede={this.state.sede}/></div>
+        <div key="listUser"><ListaUsuarios sede={this.state.sede}/></div>
       </div>
     );
   }
