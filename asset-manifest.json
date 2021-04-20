@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/React-Workshop/static/css/main.8da1119e.chunk.css",
+    "main.js": "/React-Workshop/static/js/main.203eca05.chunk.js",
+    "main.js.map": "/React-Workshop/static/js/main.203eca05.chunk.js.map",
+    "runtime-main.js": "/React-Workshop/static/js/runtime-main.e04e5bc2.js",
+    "runtime-main.js.map": "/React-Workshop/static/js/runtime-main.e04e5bc2.js.map",
+    "static/css/2.4c97ca4f.chunk.css": "/React-Workshop/static/css/2.4c97ca4f.chunk.css",
+    "static/js/2.5cf14792.chunk.js": "/React-Workshop/static/js/2.5cf14792.chunk.js",
+    "static/js/2.5cf14792.chunk.js.map": "/React-Workshop/static/js/2.5cf14792.chunk.js.map",
+    "static/js/3.7289cd07.chunk.js": "/React-Workshop/static/js/3.7289cd07.chunk.js",
+    "static/js/3.7289cd07.chunk.js.map": "/React-Workshop/static/js/3.7289cd07.chunk.js.map",
+    "index.html": "/React-Workshop/index.html",
+    "static/css/2.4c97ca4f.chunk.css.map": "/React-Workshop/static/css/2.4c97ca4f.chunk.css.map",
+    "static/css/main.8da1119e.chunk.css.map": "/React-Workshop/static/css/main.8da1119e.chunk.css.map",
+    "static/js/2.5cf14792.chunk.js.LICENSE.txt": "/React-Workshop/static/js/2.5cf14792.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.e04e5bc2.js",
+    "static/css/2.4c97ca4f.chunk.css",
+    "static/js/2.5cf14792.chunk.js",
+    "static/css/main.8da1119e.chunk.css",
+    "static/js/main.203eca05.chunk.js"
+  ]
+}
