@@ -43,6 +43,7 @@ export default class Usuarios extends Component {
 
   deleteUser = (usuario) =>{
       db.usuarios.doc(usuario.id).delete()
+      this.getUsuarios()
   }
 
   renderizarUsuarios(){

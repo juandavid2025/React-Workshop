@@ -10,6 +10,7 @@ import { Container } from "react-bootstrap";
 import NavBar from "../components/NavBar";
 import Login from "../components/Login";
 import PrivateRoute from "../components/PrivateRoute";
+import Sede from "../pages/Sede";
 
 export default (
     <Switch>
@@ -35,6 +36,12 @@ export default (
             <Container>
             <NavBar />
             <Sedes />
+            </Container>
+        </PrivateRoute>
+        <PrivateRoute exact path="/sede/:id">
+            <Container>
+                <NavBar/>
+                <Sede/>
             </Container>
         </PrivateRoute>
         <Route exact path="/signup">

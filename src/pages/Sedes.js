@@ -3,6 +3,7 @@ import { Table } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import AddSedeButton from "../components/AddSedeButton";
 import {db} from "../config/firebase";
+import {Link} from "react-router-dom"
 
 export default class Sedes extends Component {
   constructor() {
@@ -31,7 +32,6 @@ export default class Sedes extends Component {
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          console.log(doc.data());
           sedes.push(doc.data());
         });
         this.setState({sedes});
@@ -55,7 +55,7 @@ export default class Sedes extends Component {
               <td>{sede.location}</td>
               <td>{sede.active}</td>
               <td>
-                <Button variant="info">editar</Button>
+                <Button variant="info" >editar</Button>
                 <Button variant="danger" onClick={()=>this.deleteSede(sede)} >Eliminar</Button>
               </td>
           </tr>
@@ -82,6 +82,9 @@ export default class Sedes extends Component {
           <tbody>{this.renderizarSedes()}</tbody>
         </Table>
         <AddSedeButton/>
+        <div>
+          <Sede id={sede.id}/>
+        </div>
       </div>
     );
   }

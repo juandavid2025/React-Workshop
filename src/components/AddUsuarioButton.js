@@ -1,21 +1,34 @@
 import {Button, Modal,Form} from "react-bootstrap"
-import React, {useState} from "react"
+import React, {useState,Component} from "react"
 import {db} from "../config/firebase"
 
 
-export default function AddUsuarioButton() {
+export default class AddUsuarioButton extends Component {
+    constructor(){
+        super()
+        this.state={
+            sedes:[],
+            open:false,
+            id:"",
+            Nombre:"",
+            password:"",
+            Apellido:"",
+            Email:"",
+            Validez:"",
+            Sede:"",
+            Activo:""
+        }
+        this.openModal=this.openModal.bind(this)
+        this.closeModal=this.closeModal.bind(this)
+        this.generateUUID=this.generateUUID.bind(this)
+    }
 
-    const [sedes,setSedes]= useState([])
-    const [open, setOpen] = useState(false)
-    const [id, setId] = useState("")
-    const [Nombre, setNombre] = useState("")
-    const [Apellido, setApellido] = useState("")
-    const [Email, setEmail] = useState("")
-    const [Validez, setValidez] = useState("")
-    const [Sede, setSede] = useState("")
-    const [Activo, setActivo] = useState("")
+    componentDidMount(){
+        this.getSedes()
+        this.generateUUID()
+    }
 
-    function generateUUID() { // Public Domain/MIT
+    generateUUID() { // Public Domain/MIT
         var d = new Date().getTime();//Timestamp
         var d2 = (performance && performance.now && (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
         var uuid= 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -29,12 +42,12 @@ export default function AddUsuarioButton() {
             }
             return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
         });  
-        setId(uuid)
-        console.log(id)
+        this.state.id=uuid
+        console.log(this.state.id)
     }
 
     
-    function getSedes(){
+    getSedes(){
         let sedes = [];
 
         db.sedes
@@ -44,89 +57,124 @@ export default function AddUsuarioButton() {
             sedes.push(doc.data());
           });
         });
-        setSedes({sedes});
+        this.state.sedes=sedes;
         console.log("sedes")
     }
 
-    function renderOptions(){
-        let options=[];
-        for(let i=0;i<sedes.length;i++){
-            options.push(<option value={sedes[i].id}>{sedes[i].name}</option>)
-        }
-        console.log("vista")
-        return options;
+    renderOptions(){
+        let options=this.state.sedes.map((sede)=>(
+            <option value={sede.id}>{sede.name}</option>
+        ));
+        return options
     }
 
-    function openModal(){
-        getSedes()
-        generateUUID()
-        setOpen(true)
+    openModal(){
+        this.setState({open:true})
     }
 
-    function closeModal(){
-        setOpen(false)
+    closeModal(){
+        this.setState({open:false})
+    }
+
+    handleInputChange = (event) =>{
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+        let user= this.state.user;
+    
+        this.setState({
+          [name]: value
+        });
+      }
+
+    handleChange = event=>{
+        const target= event.target;
+        const value = target.value
+        console.log(value)
+        this.setState({Sede:value})
     }
 
 
-    function handleSubmit(e){
-        e.preventDefault();
-        db.sedes.doc(Sede).collection("usuarios").doc(id).set({id:id,name:Nombre, lastname:Apellido, email:Email, vality:Validez,campus:Sede,
-            active:Activo})
-        setNombre("")
-        setApellido("")
-        setEmail("")
-        setValidez("")
-        setSede("")
-        setActivo("")
-        closeModal()
+    handleSubmit = (e) =>{
+        
+ //       db.sedes.doc(this.state.Sede.id).collection("usuarios").doc(this.state.id).set({id:this.state.id,name:this.state.Nombre, lastname:this.state.Apellido,
+ //            email:this.state.Email,password:this.state.password, vality:this.state.Validez,
+ //            campus:this.state.Sede,active:this.state.Activo})
+             console.log({id:this.state.id,name:this.state.Nombre, lastname:this.state.Apellido,
+                email:this.state.Email,password:this.state.password, vality:this.state.Validez,
+                campus:this.state.Sede,active:this.state.Activo})
 
+            db.usuarios.doc(this.state.id).set({id:this.state.id,name:this.state.Nombre, lastname:this.state.Apellido,
+                email:this.state.Email,password:this.state.password, vality:this.state.Validez.toString(),
+                campus:this.state.Sede,active:this.state.Activo})
+             this.setState({
+                id:"",
+                open:false,
+                Nombre:"",
+                Apellido:"",
+                Email:"",
+                passwrod:"",
+                Validez:"",
+                Sede:"",
+                Activo:""
+             })
+             this.generateUUID()
     }
+
+    render(){
     return (
         <>
-        <Button onClick={openModal} disabled={open} variant="outline-primary" size="sm">
+        <Button onClick={this.openModal} disabled={this.state.open} variant="outline-primary" size="sm">
             Agregar Usuario
         </Button>
-        <Modal show={open} onHide={closeModal}>
-            <Form onSubmit= {handleSubmit}>
+        <Modal show={this.state.open} onHide={this.closeModal}>
+            <Form onSubmit= {this.handleSubmit.bind(this)}>
                 <Modal.Body>
                 <Form.Group controlId="formName">
                         <Form.Label>Nombre</Form.Label>
-                        <Form.Control type="text" placeholder="Nombre" value={Nombre} onChange={e=> setNombre(e.target.value)}
+                        <Form.Control type="text" placeholder="Nombre" ref="Nombre" value={this.state.Nombre} onChange= {this.handleInputChange}
                         name="Nombre"/>
                     </Form.Group>
                     <Form.Group controlId="formName">
                         <Form.Label>Apellido</Form.Label>
-                        <Form.Control type="text" placeholder="Apellido" value={Apellido} onChange={e=> setApellido(e.target.value)}
+                        <Form.Control type="text" placeholder="Apellido" ref="Apellido" value={this.state.Apellido} onChange= {this.handleInputChange}
                         name="Apellido"/>
                     </Form.Group>
                     <Form.Group controlId="formName">
                         <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" placeholder="Email" value={Email} onChange={e=> setEmail(e.target.value)}
+                        <Form.Control type="email" placeholder="Email" ref="Email" value={this.state.Email} onChange= {this.handleInputChange}
                         name="Email"/>
                     </Form.Group>
                     <Form.Group controlId="formName">
+                        <Form.Label>Contraseña</Form.Label>
+                        <Form.Control type="password" placeholder="Contraseña" ref="password" value={this.state.Email} onChange= {this.handleInputChange}
+                        name="password"/>
+                    </Form.Group>
+                    <Form.Group controlId="formName">
                         <Form.Label>Validez</Form.Label>
-                        <Form.Control type="text" placeholder="Validez" value={Validez} onChange={e=> setValidez(e.target.value)}
+                        <Form.Control type="Date" placeholder="Validez" ref="Validez" value={this.state.Validez} onChange= {this.handleInputChange}
                         name="Validez"/>
                     </Form.Group>
                     <Form.Group controlId="formName">
                         <Form.Label>Sede</Form.Label>
-                        <Form.Control as="select">
-                            {renderOptions()}
-                        </Form.Control>
+                        <select name="Sede" value={this.state.sede} onChange={this.handleChange}>
+                            <option>Seleccionar Una Opcion</option>
+                            {this.renderOptions()}
+                        </select>
                     </Form.Group>
                     <Form.Group controlId="formName">
                         <Form.Label>Activo</Form.Label>
-                        <Form.Control type="text" placeholder="Activa" value={Activo} onChange={e=> setActivo(e.target.value)}
-                        name="Activa"/>
+                        <Form.Control type="text" placeholder="Activo" ref="Activo" value={this.state.name} onChange= {this.handleInputChange}
+                        name="Activo"/>
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={closeModal}> Cerrar </Button>
-                    <Button variant="success" type="submit"> Agregar Sede</Button>
+                    <Button variant="secondary" onClick={this.closeModal}> Cerrar </Button>
+                    <Button variant="success" type="submit"> Agregar Usuario</Button>
                 </Modal.Footer>
             </Form>
         </Modal>
         </>
     )
+    }
 }
