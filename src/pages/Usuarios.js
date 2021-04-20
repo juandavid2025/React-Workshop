@@ -3,6 +3,7 @@ import {db} from "../config/firebase";
 import {Table} from "react-bootstrap";
 import {Button} from "react-bootstrap";
 import AddUsuarioButton from "../components/AddUsuarioButton";
+import Usuario from "../pages/Usuario"
 
 export default class Usuarios extends Component {
   constructor() {
@@ -46,6 +47,10 @@ export default class Usuarios extends Component {
       this.getUsuarios()
   }
 
+  edit=(selected)=>{
+    this.setState({usuario:selected})
+  }
+
   renderizarUsuarios(){
       let lista = this.state.usuarios.map((usuario) => (
           <tr key={usuario.id}>
@@ -58,7 +63,7 @@ export default class Usuarios extends Component {
               <td>{usuario.campus}</td>
               <td>{usuario.active}</td>
               <td>
-                <Button variant="info">editar</Button>
+                <Button variant="info" onClick={()=>this.edit(usuario)}>editar</Button>
                 <Button variant="danger" onClick={()=>this.deleteUser(usuario)}>Eliminar</Button>
               </td>
           </tr>
@@ -87,6 +92,7 @@ export default class Usuarios extends Component {
           <tbody>{this.renderizarUsuarios()}</tbody>
         </Table>
         <AddUsuarioButton/>
+        <Usuario user={this.state.usuario}/>
       </div>
     );
   }
