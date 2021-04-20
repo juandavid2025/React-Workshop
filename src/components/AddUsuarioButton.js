@@ -1,6 +1,7 @@
-import {Button, Modal,Form} from "react-bootstrap"
-import React, {useState,Component} from "react"
-import {db} from "../config/firebase"
+import {Button, Modal,Form, Alert} from "react-bootstrap";
+import React, {useState,Component} from "react";
+import {db} from "../config/firebase";
+import md5 from "md5";
 
 
 export default class AddUsuarioButton extends Component {
@@ -16,7 +17,14 @@ export default class AddUsuarioButton extends Component {
             Email:"",
             Validez:"",
             Sede:"",
-            Activo:""
+            Activo:"",
+            correctPassword: true,
+            correctName: true,
+            correctLastname: true,
+            correctEmail: true,
+            correctVality: true,
+            correctCampus: true,
+            correctActive: true,
         }
         this.openModal=this.openModal.bind(this)
         this.closeModal=this.closeModal.bind(this)
@@ -63,7 +71,7 @@ export default class AddUsuarioButton extends Component {
 
     renderOptions(){
         let options=this.state.sedes.map((sede)=>(
-            <option value={sede.id}>{sede.name}</option>
+            <option key={sede.id} value={sede.id}>{sede.name}</option>
         ));
         return options
     }
@@ -104,30 +112,41 @@ export default class AddUsuarioButton extends Component {
                 email:this.state.Email,password:this.state.password, vality:this.state.Validez,
                 campus:this.state.Sede,active:this.state.Activo})
 
-            db.usuarios.doc(this.state.id).set({id:this.state.id,name:this.state.Nombre, lastname:this.state.Apellido,
-                email:this.state.Email,password:this.state.password, vality:this.state.Validez.toString(),
-                campus:this.state.Sede,active:this.state.Activo})
-             this.setState({
-                id:"",
-                open:false,
-                Nombre:"",
-                Apellido:"",
-                Email:"",
-                passwrod:"",
-                Validez:"",
-                Sede:"",
-                Activo:""
-             })
-             this.generateUUID()
+                console.log(this.state.password.length)
+
+                                if(this.state.password.length>6){
+                                                this.closeModal();
+                                                    db.usuarios.doc(this.state.id).set({id:this.state.id,name:this.state.Nombre, lastname:this.state.Apellido,
+                                                        email:this.state.Email,password:md5(this.state.password), vality:this.state.Validez.toString(),
+                                                        campus:this.state.Sede,active:this.state.Activo})
+                                                    this.setState({
+                                                        id:"",
+                                                        open:false,
+                                                        Nombre:"",
+                                                        Apellido:"",
+                                                        Email:"",
+                                                        password:"",
+                                                        Validez:"",
+                                                        Sede:"",
+                                                        Activo:"",
+                                                        correctPassword:true,
+                                                    })
+                                                    this.generateUUID()
+                                            
+                                            
+                                }else{this.setState({correctPassword:false})}
     }
 
     render(){
+    
+        let ShowalertPassword = this.state.correctPassword;
     return (
         <>
         <Button onClick={this.openModal} disabled={this.state.open} variant="outline-primary" size="sm">
             Agregar Usuario
         </Button>
-        <Modal show={this.state.open} onHide={this.closeModal}>
+        <Modal show={this.state.open} >
+        <Alert show={!ShowalertPassword} variant='warning'>Password must be at least 6 long</Alert>
             <Form onSubmit= {this.handleSubmit.bind(this)}>
                 <Modal.Body>
                 <Form.Group controlId="formName">
@@ -147,7 +166,7 @@ export default class AddUsuarioButton extends Component {
                     </Form.Group>
                     <Form.Group controlId="formName">
                         <Form.Label>Contraseña</Form.Label>
-                        <Form.Control type="password" placeholder="Contraseña" ref="password" value={this.state.Email} onChange= {this.handleInputChange}
+                        <Form.Control type="password" placeholder="Contraseña" ref="password" value={this.state.password} onChange= {this.handleInputChange}
                         name="password"/>
                     </Form.Group>
                     <Form.Group controlId="formName">
